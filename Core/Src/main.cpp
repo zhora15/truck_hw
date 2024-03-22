@@ -1,22 +1,3 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
 #include "fdcan.h"
@@ -33,60 +14,13 @@
 #include "performance_counter.h"
 #include <cstdio>
 #include "MotorControl.h"
-/* USER CODE END Includes */
+#include "SensorPolling.h"
+#include "stm32g4xx_hal_def.h"
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
 #define SIMPLEFOC_DISABLE_DEBUG
-/* USER CODE END PD */
 
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-/* USER CODE BEGIN PFP */
 
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
-
-
-//extern "C" {
-//void TIM6_DAC_IRQHandler(void) {
-//    static int counter = 0;
-//    if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) {
-//        LL_TIM_ClearFlag_UPDATE(TIM6);
-//        if (counter == 20) {
-//            flag = true;
-//            counter = 0;
-//        }
-//        counter++;
-//        ++micros_hundreds;
-//    }
-//}
-//}
 void vApplicationTickHook() {
     LL_TIM_ClearFlag_UPDATE(TIM6);
 }
@@ -115,9 +49,11 @@ int main(void)
     printf("Start\n");
     MX_TIM6_Init();
     static MotorControl MT;
-
-    MT.init();
-    MT.calibrate();
+    static SensorPolling SP;
+//    MT.init();
+//    MT.calibrate();
+    SP.init();
+    SP.start();
     printf("Scheduling\n");
     LL_TIM_ClearFlag_UPDATE(TIM6);
     LL_TIM_EnableIT_UPDATE(TIM6);
@@ -129,10 +65,6 @@ int main(void)
     }
 }
 
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
 void SystemClock_Config(void)
 {
     LL_FLASH_SetLatency(LL_FLASH_LATENCY_4);
@@ -183,14 +115,6 @@ void SystemClock_Config(void)
     HAL_InitTick (TICK_INT_PRIORITY);
 }
 
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
-
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
 void Error_Handler(void)
 {
     /* USER CODE BEGIN Error_Handler_Debug */

@@ -30,7 +30,6 @@ class TLE5012 {
   }
 
   TLE5012() : spi(HAL_SPI1::getInstance()) {
-      spi.configure();
       hal_gpio_init(cs_port, cs_pin);
       disable_cs();
   };
