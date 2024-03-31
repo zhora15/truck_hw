@@ -36,7 +36,7 @@ int32_t ICM20984::read_mems_values(uint8_t *response_buffer) {
         for (int i = 0; i < 6; ++i) {
 //            printf("%X-", (uint16_t) ((response_buffer[2*i] << 8) | response_buffer[2*i+1]));
         }
-        printf("\n");
+//        printf("\n");
     } while (false);
     return status;
 }

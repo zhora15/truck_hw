@@ -2,20 +2,29 @@
 #include "hal_gpio.h"
 #include "stm32g4xx_ll_gpio.h"
 #include "tle5012.h"
+#include <cstdio>
+
 
 class TLE5012 {
  private:
   HAL_SPI1 &spi;
   const uint32_t cs_port = GPIO_PORT_B;
   const uint32_t cs_pin = GPIO_PIN_2;
+  const enum spi_polarity_ spi_polarity = SPI_POLARITY_LOW;
 
   int32_t read_data_from_sensor(uint16_t cmd, uint8_t response[]) {
       int32_t status = 0;
       uint8_t send_buffer[2];
       cmd_to_buffer(cmd, send_buffer);
+      if (spi.start_communication(spi_polarity) != 0) {
+          status = 1;
+      }
       enable_cs();
       status = spi.exchange_bytes_half_duplex(send_buffer, 2, response, 4);
       disable_cs();
+      if (spi.stop_communication() != 0) {
+          status = 2;
+      }
       return status;
   }
   inline void enable_cs() {
@@ -52,6 +61,7 @@ class TLE5012 {
       if (status == 0) {
           if ((response[0] & 0x80) == 0) {
               status = 1;  // value wasn't update after last read
+              printf("OLD\n");
           }
           angle = ((response[0] << 8) | response[1]) & 0x7FFF; // reverse bytes and delete 16th bit
       }

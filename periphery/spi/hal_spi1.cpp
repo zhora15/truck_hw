@@ -37,11 +37,10 @@ int32_t HAL_SPI1::exchange_bytes_duplex(
     int32_t status = 0;
     uint32_t temp_tick_counter = HAL_GetTick();
     if (LL_SPI_GetTransferDirection(SPI1) != LL_SPI_FULL_DUPLEX){
-        printf("SWITCH\n");
         LL_SPI_Disable(SPI1);
         LL_SPI_SetTransferDirection(SPI1, LL_SPI_FULL_DUPLEX);
-        LL_SPI_Enable(SPI1);
     }
+    LL_SPI_Enable(SPI1);
     if (LL_SPI_IsActiveFlag_RXNE(SPI1)) {
         LL_SPI_ReceiveData8(SPI1);
     }
@@ -86,6 +85,7 @@ int32_t HAL_SPI1::exchange_bytes_duplex(
         }
         ptr_rx_bytes[i] = LL_SPI_ReceiveData8(SPI1);
     }
+    LL_SPI_Disable(SPI1);
     return status;
 }
 
@@ -102,12 +102,11 @@ int32_t HAL_SPI1::exchange_bytes_half_duplex(
     uint32_t temp_tick_counter = HAL_GetTick(); // TODO Remove in FreeRTOS
 
     if (LL_SPI_GetTransferDirection(SPI1) != LL_SPI_HALF_DUPLEX_TX){
-        printf("SWITCH HALF\n");
         LL_SPI_Disable(SPI1);
         LL_SPI_SetTransferDirection(SPI1, LL_SPI_HALF_DUPLEX_TX);
-        LL_SPI_Enable(SPI1);
     }
 
+    LL_SPI_Enable(SPI1);
     while ((LL_SPI_IsActiveFlag_TXE(SPI1) == 0) || (LL_SPI_IsActiveFlag_BSY(SPI1) == 1)) {
         if (((HAL_GetTick() - temp_tick_counter)
             > time_out)) {
@@ -201,7 +200,6 @@ int32_t HAL_SPI1::start_communication(enum spi_polarity_ set_polarity) {
 
     if (LL_SPI_GetClockPolarity(SPI1) != get_polarity(set_polarity)) {
         clock_polarity = set_polarity;
-        printf("SWITCH POLAR\n");
         LL_SPI_Disable(SPI1);
         LL_SPI_SetClockPolarity(SPI1, get_polarity(clock_polarity));
         LL_SPI_Enable(SPI1);

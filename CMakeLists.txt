@@ -36,7 +36,7 @@ add_compile_options(-ffunction-sections -fdata-sections -fno-common -fmessage-le
 add_compile_options($<$<COMPILE_LANGUAGE:ASM>:-x$<SEMICOLON>assembler-with-cpp>)
 
 message(STATUS "Maximum optimization for speed")
-add_compile_options(-Ofast)
+add_compile_options(-Og)
 
 #if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 #    message(STATUS "Maximum optimization for speed")
@@ -53,10 +53,11 @@ add_compile_options(-Ofast)
 #endif ()
 
 include_directories(Core/Inc Drivers/STM32G4xx_HAL_Driver/Inc Drivers/STM32G4xx_HAL_Driver/Inc/Legacy Drivers/CMSIS/Device/ST/STM32G4xx/Include Drivers/CMSIS/Include
-utils/ board/ periphery/uart periphery/gpio periphery/spi periphery/pwm6 periphery/fdcan chipset/tle5012 SimpleFOC/src/common
-SimpleFOC/src/drivers SimpleFOC/src portSimpleFOC/Sensor portSimpleFOC/Driver middleware/FreeRTOS/include
-        middleware/FreeRTOS/ARM_CM4F application/MotorControl/include chipset/icm20984/include
-        application/SensorPolling/include)
+        board/ periphery/uart periphery/gpio periphery/spi periphery/pwm6 periphery/fdcan periphery/pwm_servo/include
+        chipset/tle5012 chipset/icm20984/include chipset/Servo/include
+        portSimpleFOC/Sensor portSimpleFOC/Driver SimpleFOC/src/common SimpleFOC/src/drivers SimpleFOC/src
+        middleware/FreeRTOS/include middleware/FreeRTOS/ARM_CM4F utils/
+        application/MotorControl/include application/SensorPolling/include application/Protocol/include application/ServoController/include)
 
 add_definitions(-DDEBUG -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -DSTM32G431xx)
 
@@ -66,9 +67,11 @@ file(GLOB SIMPLEFOC_SOURCES "SimpleFOC/src/common/foc_utils.*"
         "SimpleFOC/src/common/base_classes/FOCMotor.*" "SimpleFOC/src/BLDCMotor.*"
         "SimpleFOC/src/common/base_classes/CurrentSense.*")
 
-file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*" "board/*" "periphery/gpio/*" "periphery/uart/*" "periphery/pwm6/*" "periphery/spi/*" "periphery/fdcan/*" "chipset/tle5012/*"
-             "portSimpleFOC/Sensor/*" "portSimpleFOC/Driver/*" "portSimpleFOC/time_utils.cpp" "utils/*" "middleware/FreeRTOS/*"
-        "application/MotorControl/sources/*" "chipset/icm20984/sources/*" "application/SensorPolling/sources/*")
+file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*" "board/*" "periphery/gpio/*" "periphery/uart/*" "periphery/pwm6/*"
+        "periphery/spi/*" "periphery/fdcan/*" "periphery/pwm_servo/*" "chipset/tle5012/*" "chipset/icm20984/sources/*" "chipset/Servo/Servo.cpp"
+        "portSimpleFOC/Sensor/*" "portSimpleFOC/Driver/*" "portSimpleFOC/time_utils.cpp"
+        "application/MotorControl/sources/*" "application/SensorPolling/sources/*" "application/Protocol/*"
+        "utils/*" "middleware/FreeRTOS/*" "application/ServoController/*")
 
 set(SOURCES ${SOURCES} ${SIMPLEFOC_SOURCES})
 

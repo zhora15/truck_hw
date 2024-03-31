@@ -16,6 +16,8 @@
 #include "MotorControl.h"
 #include "SensorPolling.h"
 #include "stm32g4xx_hal_def.h"
+#include "Protocol.h"
+#include "ServoController.h"
 
 #define SIMPLEFOC_DISABLE_DEBUG
 
@@ -48,12 +50,17 @@ int main(void)
     MX_LPUART1_UART_Init();
     printf("Start\n");
     MX_TIM6_Init();
-    static MotorControl MT;
-    static SensorPolling SP;
+    static MotorControl& MT = MotorControl::getInstance();
+    static SensorPolling& SP = SensorPolling::getInstance();
+    static ServoController& SC = ServoController::getInstance();
+    static Protocol PR;
+//    SP.init();
+//    SP.start();
 //    MT.init();
 //    MT.calibrate();
-    SP.init();
-    SP.start();
+//    PR.init();
+    SC.init();
+
     printf("Scheduling\n");
     LL_TIM_ClearFlag_UPDATE(TIM6);
     LL_TIM_EnableIT_UPDATE(TIM6);

@@ -8,7 +8,7 @@
 class Driver6PWM : public BLDCDriver {
  private:
   int enable_pin;
-
+  // TODO init enable_pin
   float dead_zone;
 
   PhaseState phase_state[3] = {PhaseState::PHASE_ON, PhaseState::PHASE_ON, PhaseState::PHASE_ON};

@@ -47,12 +47,12 @@ class MagneticEncoderTLE5012 : public Sensor {
       if (sensor_.read_angle_value(raw_angle) == 0) {
           angle_prev = RAW_TO_RAD(raw_angle);
       } else {
-            printf("OLD\n");
+//            printf("OLD\n");
       }
       if (sensor_.read_angle_speed(raw_speed) == 0) {
           velocity = RAW_TO_RAD_PER_SEC(raw_speed);
       } else {
-          printf("OLD\n");
+//          printf("OLD\n");
       }
       full_rotations = 0;
   }
