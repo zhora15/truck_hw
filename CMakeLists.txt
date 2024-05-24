@@ -54,7 +54,7 @@ add_compile_options(-Og)
 
 include_directories(Core/Inc Drivers/STM32G4xx_HAL_Driver/Inc Drivers/STM32G4xx_HAL_Driver/Inc/Legacy Drivers/CMSIS/Device/ST/STM32G4xx/Include Drivers/CMSIS/Include
         board/ periphery/uart periphery/gpio periphery/spi periphery/pwm6 periphery/fdcan periphery/pwm_servo/include
-        chipset/tle5012 chipset/icm20984/include chipset/Servo/include
+        chipset/tle5012/include chipset/icm20984/include chipset/Servo/include
         portSimpleFOC/Sensor portSimpleFOC/Driver SimpleFOC/src/common SimpleFOC/src/drivers SimpleFOC/src
         middleware/FreeRTOS/include middleware/FreeRTOS/ARM_CM4F utils/
         application/MotorControl/include application/SensorPolling/include application/Protocol/include application/ServoController/include)

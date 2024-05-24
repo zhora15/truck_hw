@@ -22,8 +22,29 @@
 // Commands for updated read
 #define READ_UPD_STA_CMD            0x8401
 
-//class TLE5012 {
-// public:
-//  int32_t read_angle_value(int32_t &angle);
-//  TLE5012(SPI &spi, GPIO_TypeDef *cs_port, uint32_t cs_pin) : spi_(spi), cs_port_(cs_port), cs_pin_(cs_pin);
-//};
+class TLE5012 {
+ private:
+  HAL_SPI1 &spi;
+  const uint32_t cs_port = GPIO_PORT_B;
+  const uint32_t cs_pin = GPIO_PIN_2;
+  const enum spi_polarity_ spi_polarity = SPI_POLARITY_LOW;
+
+  int32_t read_data_from_sensor(uint16_t cmd, uint8_t response[]);
+  inline void enable_cs(); // todo constexpr
+  inline void disable_cs();
+  inline void cmd_to_buffer(uint16_t cmd, uint8_t buff[2]);
+  TLE5012() : spi(HAL_SPI1::getInstance());
+  ~TLE5012() {};
+  TLE5012(const TLE5012 &obj) = delete;
+  TLE5012 &operator=(const TLE5012 &obj) = delete;
+
+ public:
+
+  static TLE5012 &getInstance() {
+      static TLE5012 _instance;
+      return _instance;
+  }
+  int32_t read_angle_value(int32_t &angle);
+  int32_t read_angle_speed(int32_t &speed);
+  int32_t read_angle_revolution(int32_t &revolution);
+}
