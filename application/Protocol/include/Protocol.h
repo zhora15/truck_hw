@@ -12,6 +12,22 @@
 
 #pragma pack(push, 1)
 typedef struct {
+  uint32_t P;
+  uint32_t G;
+  uint32_t master_public_key;
+} protocol_request_encode_public_keys;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct {
+  uint32_t P;
+  uint32_t G;
+  uint32_t slave_public_key;
+} protocol_response_encode_public_keys;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct {
   float accel_x_axis;
   float accel_y_axis;
   float accel_z_axis;
@@ -38,6 +54,8 @@ typedef struct {
 typedef struct {
   float target_speed;
   bool is_enable;
+  uint8_t reserved[3];
+  uint32_t crc;
 } protocol_request_motor;
 #pragma pack(pop)
 
@@ -52,6 +70,8 @@ typedef struct {
   float left_servo_angle;
   float right_servo_angle;
   bool is_enable;
+  uint8_t reserved[3];
+  uint32_t crc;
 } protocol_request_servo;
 #pragma pack(pop)
 
@@ -63,12 +83,13 @@ typedef struct {
 
 #define CALLBACKS_MAX_NUM 20
 #define REQUEST_BASE_ID_OFFSET 0
-#define INFORM_BASE_ID_OFFSET CALLBACKS_MAX_NUM
-#define RESPONSE_BASE_ID_OFFSET (CALLBACKS_MAX_NUM*2)
+#define INFORM_BASE_ID_OFFSET (CALLBACKS_MAX_NUM + REQUEST_BASE_ID_OFFSET)
+#define RESPONSE_BASE_ID_OFFSET (INFORM_BASE_ID_OFFSET + CALLBACKS_MAX_NUM)
 
 #define CONFIG_TAG 1
 #define MOTOR_TAG 2
 #define SERVO_TAG 3
+#define ENCODE_PUBLIC_KEYS_TAG 4
 
 #define IMU_TAG 1
 #define MOTION_TAG 2
@@ -170,8 +191,10 @@ class Protocol {
   FDCAN communication_unit;
   static TaskHandle_t task_handle;
   static TimerHandle_t inform_timer_handle;
-  void task();
+  static uint32_t P, G, master_public_key, rand_private_key;
   request_callback_t request_callback[CALLBACKS_MAX_NUM] = {nullptr};
+  void task();
+
   static void startTaskImpl(void *_this) {
       ((Protocol *) _this)->task();
   }
@@ -191,8 +214,19 @@ class Protocol {
       BaseType_t task_woken = pdFALSE;
       xTaskNotifyFromISR(task_handle, task_notify, eSetBits, &task_woken);
   }
+
+  void encryptDecrypt(uint8_t *request_data, uint32_t request_data_size);
+
  public:
   void init();
   void start();
+
+  static void set_public_keys (uint32_t P_input, uint32_t G_input,
+                               uint32_t master_public_key_input, uint32_t rand_private_key_input) {
+      P = P_input;
+      G = G_input;
+      master_public_key = master_public_key_input;
+      rand_private_key = rand_private_key_input;
+  }
 };
 #endif //TRUCK_HW_APPLICATION_PROTOCOL_INCLUDE_PROTOCOL_H_

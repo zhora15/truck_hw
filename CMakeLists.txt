@@ -57,7 +57,8 @@ include_directories(Core/Inc Drivers/STM32G4xx_HAL_Driver/Inc Drivers/STM32G4xx_
         chipset/tle5012 chipset/icm20984/include chipset/Servo/include
         portSimpleFOC/Sensor portSimpleFOC/Driver SimpleFOC/src/common SimpleFOC/src/drivers SimpleFOC/src
         middleware/FreeRTOS/include middleware/FreeRTOS/ARM_CM4F utils/
-        application/MotorControl/include application/SensorPolling/include application/Protocol/include application/ServoController/include)
+        application/MotorControl/include application/SensorPolling/include application/Protocol/include application/ServoController/include
+        application/Watchdog/include)
 
 add_definitions(-DDEBUG -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -DSTM32G431xx)
 
@@ -71,7 +72,7 @@ file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*" "board/*" "periphery/gpio/*" 
         "periphery/spi/*" "periphery/fdcan/*" "periphery/pwm_servo/*" "chipset/tle5012/*" "chipset/icm20984/sources/*" "chipset/Servo/Servo.cpp"
         "portSimpleFOC/Sensor/*" "portSimpleFOC/Driver/*" "portSimpleFOC/time_utils.cpp"
         "application/MotorControl/sources/*" "application/SensorPolling/sources/*" "application/Protocol/*"
-        "utils/*" "middleware/FreeRTOS/*" "application/ServoController/*")
+        "utils/*" "middleware/FreeRTOS/*" "application/ServoController/*" "application/Watchdog/*")
 
 set(SOURCES ${SOURCES} ${SIMPLEFOC_SOURCES})
 
