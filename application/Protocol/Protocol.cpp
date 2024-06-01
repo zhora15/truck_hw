@@ -6,9 +6,18 @@
 TaskHandle_t Protocol::task_handle = NULL;
 TimerHandle_t Protocol::inform_timer_handle = NULL;
 
+uint32_t power(uint32_t a, uint32_t b, uint32_t P) {
+    if (b == 1) {
+        return a;
+    }
+    else {
+        return (((long long int) pow(a, b)) % P);
+    }
+}
+
 void motor_control_request_handle(const uint8_t *request_data, uint32_t request_data_size,
                                         uint8_t *response_data, uint32_t &response_data_size) {
-    if (request_data_size != sizeof(protocol_request_motor)) {
+    if (request_data_size == sizeof(protocol_request_motor)) {
         int32_t status = 0;
         protocol_request_motor request = *(protocol_request_motor *) request_data;
         MotorControl& MT = MotorControl::getInstance();
@@ -22,7 +31,7 @@ void motor_control_request_handle(const uint8_t *request_data, uint32_t request_
 
 void servo_control_request_handle(const uint8_t *request_data, uint32_t request_data_size,
                                   uint8_t *response_data, uint32_t &response_data_size) {
-    if (request_data_size != sizeof(protocol_request_servo)) {
+    if (request_data_size == sizeof(protocol_request_servo)) {
         int32_t status = 0;
         protocol_request_servo request = *(protocol_request_servo *) request_data;
         ServoController& SC = ServoController::getInstance();
@@ -34,11 +43,28 @@ void servo_control_request_handle(const uint8_t *request_data, uint32_t request_
     }
 }
 
+void encode_public_keys_request_handle(const uint8_t *request_data, uint32_t request_data_size,
+                                       uint8_t *response_data, uint32_t &response_data_size) {
+    if (request_data_size != sizeof(protocol_request_encode_public_keys)) {
+        protocol_request_encode_public_keys request = *(protocol_request_encode_public_keys *) request_data;
+
+        std::srand(xTaskGetTickCount());
+        uint32_t rand_private_key = std::rand();
+        Protocol::set_public_keys(request.P, request.G, request.master_public_key, rand_private_key);
+
+        uint32_t y = power(request.G, rand_private_key, request.P);
+        protocol_response_encode_public_keys response = {.P = request.P, .G = request.G, .slave_public_key = y};
+        memcpy(response_data, &response, sizeof(protocol_response_encode_public_keys));
+        response_data_size = sizeof(protocol_response_encode_public_keys);
+    }
+}
+
 void Protocol::init() {
     BaseType_t status = xTaskCreate(startTaskImpl, "protocol_task", 512, this, 3, &task_handle);
     if (status == pdTRUE) {
         bind(MOTOR_TAG, motor_control_request_handle);
         bind(SERVO_TAG, servo_control_request_handle);
+        bind (ENCODE_PUBLIC_KEYS_TAG, encode_public_keys_request_handle);
         inform_timer_handle = xTimerCreate("inform_tim", pdMS_TO_TICKS(20), pdTRUE, NULL, Protocol::send_inform_callback);
         communication_unit.set_rx_complete_callback(Protocol::on_new_request);
         communication_unit.init();
@@ -46,6 +72,13 @@ void Protocol::init() {
         xTimerStart(inform_timer_handle, 10);
     } else {
         printf("Error сreating protocol task\n");
+    }
+}
+
+void Protocol::encryptDecrypt(uint8_t *request_data, uint32_t request_data_size) {
+    uint32_t secret_key = power(master_public_key, rand_private_key, P);;
+    for (int i = 0; i < request_data_size; i += sizeof(secret_key)){
+        *(uint32_t *)(&(request_data[i])) ^= secret_key;
     }
 }
 
@@ -64,6 +97,9 @@ void Protocol::task() {
                 if ((tag >= 0)
                     && (tag < CALLBACKS_MAX_NUM)
                     && (request_callback[tag]) != nullptr) {
+                    if (tag != ENCODE_PUBLIC_KEYS_TAG) {
+                        encryptDecrypt(request_data, request_data_size);
+                    }
                     request_callback[tag](request_data, request_data_size, response_data, response_data_size);
                     communication_unit.transmit(tag + RESPONSE_BASE_ID_OFFSET, response_data, response_data_size);
                 }
