@@ -22,6 +22,10 @@
 // Commands for updated read
 #define READ_UPD_STA_CMD            0x8401
 
+#include "hal_spi1.h"
+#include "hal_gpio.h"
+#include "stm32g4xx_ll_gpio.h"
+
 class TLE5012 {
  private:
   HAL_SPI1 &spi;
@@ -33,7 +37,7 @@ class TLE5012 {
   inline void enable_cs(); // todo constexpr
   inline void disable_cs();
   inline void cmd_to_buffer(uint16_t cmd, uint8_t buff[2]);
-  TLE5012() : spi(HAL_SPI1::getInstance());
+  TLE5012();
   ~TLE5012() {};
   TLE5012(const TLE5012 &obj) = delete;
   TLE5012 &operator=(const TLE5012 &obj) = delete;
@@ -47,4 +51,4 @@ class TLE5012 {
   int32_t read_angle_value(int32_t &angle);
   int32_t read_angle_speed(int32_t &speed);
   int32_t read_angle_revolution(int32_t &revolution);
-}
+};

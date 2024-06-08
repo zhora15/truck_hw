@@ -1,6 +1,3 @@
-#include "hal_spi1.h"
-#include "hal_gpio.h"
-#include "stm32g4xx_ll_gpio.h"
 #include "tle5012.h"
 #include <cstdio>
 
@@ -20,7 +17,7 @@ int32_t TLE5012::read_data_from_sensor(uint16_t cmd, uint8_t response[]) {
     return status;
 }
 
-inline void  TLE5012::enable_cs() {
+inline void TLE5012::enable_cs() {
     hal_gpio_reset_pin(cs_port, cs_pin);
 }
 

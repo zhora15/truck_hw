@@ -1,5 +1,5 @@
 #include "base_classes/Sensor.h"
-#include "tle5012.cpp"
+#include "tle5012.h"
 #include "foc_utils.h"
 
 #include "stm32g4xx_hal.h"
