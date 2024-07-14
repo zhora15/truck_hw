@@ -53,7 +53,7 @@ add_compile_options(-Og)
 #endif ()
 
 include_directories(Core/Inc Drivers/STM32G4xx_HAL_Driver/Inc Drivers/STM32G4xx_HAL_Driver/Inc/Legacy Drivers/CMSIS/Device/ST/STM32G4xx/Include Drivers/CMSIS/Include
-        board/ periphery/uart periphery/gpio periphery/spi periphery/pwm6 periphery/fdcan periphery/pwm_servo/include
+        board/ periphery/uart periphery/gpio periphery/spi periphery/pwm6 periphery/fdcan periphery/pwm_servo/include periphery/encoder_timer/include chipset/wheel_encoder/include
         chipset/tle5012/include chipset/icm20984/include chipset/Servo/include
         portSimpleFOC/Sensor portSimpleFOC/Driver SimpleFOC/src/common SimpleFOC/src/drivers SimpleFOC/src
         middleware/FreeRTOS/include middleware/FreeRTOS/ARM_CM4F utils/
@@ -68,10 +68,11 @@ file(GLOB SIMPLEFOC_SOURCES "SimpleFOC/src/common/foc_utils.*"
         "SimpleFOC/src/common/base_classes/CurrentSense.*")
 
 file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*" "board/*" "periphery/gpio/*" "periphery/uart/*" "periphery/pwm6/*"
-        "periphery/spi/*" "periphery/fdcan/*" "periphery/pwm_servo/*" "chipset/tle5012/*" "chipset/icm20984/sources/*" "chipset/Servo/Servo.cpp"
+        "periphery/spi/*" "periphery/fdcan/*" "periphery/pwm_servo/*" "periphery/encoder_timer/*"
+        "chipset/tle5012/*" "chipset/icm20984/sources/*" "chipset/Servo/Servo.cpp" "chipset/wheel_encoder/wheel_encoder.cpp"
         "portSimpleFOC/Sensor/*" "portSimpleFOC/Driver/*" "portSimpleFOC/time_utils.cpp"
         "application/MotorControl/sources/*" "application/SensorPolling/sources/*" "application/Protocol/*"
-        "utils/*" "middleware/FreeRTOS/*" "application/ServoController/*")
+        "utils/*" "middleware/FreeRTOS/*" "application/ServoController/*" "Core/Src/Arduino.cpp")
 
 set(SOURCES ${SOURCES} ${SIMPLEFOC_SOURCES})
 

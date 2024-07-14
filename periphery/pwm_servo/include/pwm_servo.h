@@ -1,45 +1,39 @@
-//
-// Created by Георгий Сенин on 04.04.2024.
-//
-
 #ifndef TRUCK_HW_PERIPHERY_PWM_SERVO_INCLUDE_PWM_SERVO_H_
 #define TRUCK_HW_PERIPHERY_PWM_SERVO_INCLUDE_PWM_SERVO_H_
 
+#include <unordered_map>
 #include "stm32g4xx_ll_tim.h"
 
-typedef enum {
+
+enum class PWMServoType : uint8_t {
   PWM_SERVO_1,
   PWM_SERVO_2
-} pwm_servo_type;
+};
 
 class PWMServo {
  private:
-  pwm_servo_type type_;
+  PWMServoType type_;
   bool is_initialized = false;
   static bool is_common_tim_initialized;
-  const uint32_t tim_preload = 144;
-  const uint32_t tim_autoreload = 20000;
+  const TIM_TypeDef *common_timer_handle = TIM3;
+  static constexpr uint32_t TIM_PRESCALER = 143;
+  static constexpr uint32_t TIM_AUTORELOAD = 20000;
+  uint32_t timer_channel;
   int32_t init();
 
-  PWMServo(pwm_servo_type init_type) {
-      type_ = init_type;
-      init();
-  };
+  PWMServo(PWMServoType init_type);
   ~PWMServo() {};
   PWMServo(const PWMServo &obj) = delete;
   PWMServo &operator=(const PWMServo &obj) = delete;
 
  public:
-  static PWMServo &get_instance(pwm_servo_type get_type){
-      static PWMServo Servo1(PWM_SERVO_1);
-      static PWMServo Servo2(PWM_SERVO_2);
-      Servo1.type_ = PWM_SERVO_1;
-      Servo2.type_ = PWM_SERVO_2;
-      switch (get_type) {
-          case PWM_SERVO_1: return Servo1;
-          case PWM_SERVO_2: return Servo2;
-          default: break;
+  static PWMServo &get_instance(PWMServoType type) {
+      static std::unordered_map<PWMServoType, PWMServo *> instances;
+      auto it = instances.find(type);
+      if (it == instances.end()) {
+          instances[type] = new PWMServo(type);
       }
+      return *instances[type];
   }
 
   int32_t set_us_impulse(uint32_t us);

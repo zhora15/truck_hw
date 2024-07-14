@@ -1,27 +1,27 @@
 ///* USER CODE BEGIN Header */
-///**
-//  ******************************************************************************
-//  * @file    usart.c
-//  * @brief   This file provides code for the configuration
-//  *          of the USART instances.
-//  ******************************************************************************
-//  * @attention
-//  *
-//  * Copyright (c) 2023 STMicroelectronics.
-//  * All rights reserved.
-//  *
-//  * This software is licensed under terms that can be found in the LICENSE file
-//  * in the root directory of this software component.
-//  * If no LICENSE file comes with this software, it is provided AS-IS.
-//  *
-//  ******************************************************************************
-//  */
+/////**
+////  ******************************************************************************
+////  * @file    usart.c
+////  * @brief   This file provides code for the configuration
+////  *          of the USART instances.
+////  ******************************************************************************
+////  * @attention
+////  *
+////  * Copyright (c) 2023 STMicroelectronics.
+////  * All rights reserved.
+////  *
+////  * This software is licensed under terms that can be found in the LICENSE file
+////  * in the root directory of this software component.
+////  * If no LICENSE file comes with this software, it is provided AS-IS.
+////  *
+////  ******************************************************************************
+////  */
 ///* USER CODE END Header */
 ///* Includes ------------------------------------------------------------------*/
 //#include "usart.h"
 //
 ///* USER CODE BEGIN 0 */
-//
+////
 ///* USER CODE END 0 */
 //
 ///* LPUART1 init function */
@@ -30,7 +30,7 @@
 //{
 //
 //  /* USER CODE BEGIN LPUART1_Init 0 */
-//
+////
 //  /* USER CODE END LPUART1_Init 0 */
 //
 //  LL_LPUART_InitTypeDef LPUART_InitStruct = {0};
@@ -55,7 +55,7 @@
 //  LL_GPIO_Init(Debug_lpuart_GPIO_Port, &GPIO_InitStruct);
 //
 //  /* USER CODE BEGIN LPUART1_Init 1 */
-//
+////
 //  /* USER CODE END LPUART1_Init 1 */
 //  LPUART_InitStruct.PrescalerValue = LL_LPUART_PRESCALER_DIV1;
 //  LPUART_InitStruct.BaudRate = 500000;
@@ -70,7 +70,7 @@
 //  LL_LPUART_EnableHalfDuplex(LPUART1);
 //
 //  /* USER CODE BEGIN WKUPType LPUART1 */
-//
+////
 //  /* USER CODE END WKUPType LPUART1 */
 //
 //  LL_LPUART_Enable(LPUART1);
@@ -80,7 +80,7 @@
 //  {
 //  }
 //  /* USER CODE BEGIN LPUART1_Init 2 */
-//
+////
 //  /* USER CODE END LPUART1_Init 2 */
 //
 //}
@@ -90,7 +90,7 @@
 //{
 //
 //  /* USER CODE BEGIN USART2_Init 0 */
-//
+////
 //  /* USER CODE END USART2_Init 0 */
 //
 //  LL_USART_InitTypeDef USART_InitStruct = {0};
@@ -115,7 +115,7 @@
 //  LL_GPIO_Init(OneWire_USART2_GPIO_Port, &GPIO_InitStruct);
 //
 //  /* USER CODE BEGIN USART2_Init 1 */
-//
+////
 //  /* USER CODE END USART2_Init 1 */
 //  USART_InitStruct.PrescalerValue = LL_USART_PRESCALER_DIV1;
 //  USART_InitStruct.BaudRate = 115200;
@@ -131,7 +131,7 @@
 //  LL_USART_ConfigHalfDuplexMode(USART2);
 //
 //  /* USER CODE BEGIN WKUPType USART2 */
-//
+////
 //  /* USER CODE END WKUPType USART2 */
 //
 //  LL_USART_Enable(USART2);
@@ -141,7 +141,7 @@
 //  {
 //  }
 //  /* USER CODE BEGIN USART2_Init 2 */
-//
+////
 //  /* USER CODE END USART2_Init 2 */
 //
 //}
@@ -151,7 +151,7 @@
 //{
 //
 //  /* USER CODE BEGIN USART3_Init 0 */
-//
+////
 //  /* USER CODE END USART3_Init 0 */
 //
 //  LL_USART_InitTypeDef USART_InitStruct = {0};
@@ -185,7 +185,7 @@
 //  LL_GPIO_Init(KS_USART3_RX_GPIO_Port, &GPIO_InitStruct);
 //
 //  /* USER CODE BEGIN USART3_Init 1 */
-//
+////
 //  /* USER CODE END USART3_Init 1 */
 //  USART_InitStruct.PrescalerValue = LL_USART_PRESCALER_DIV1;
 //  USART_InitStruct.BaudRate = 115200;
@@ -202,7 +202,7 @@
 //  LL_USART_ConfigAsyncMode(USART3);
 //
 //  /* USER CODE BEGIN WKUPType USART3 */
-//
+////
 //  /* USER CODE END WKUPType USART3 */
 //
 //  LL_USART_Enable(USART3);
@@ -212,28 +212,28 @@
 //  {
 //  }
 //  /* USER CODE BEGIN USART3_Init 2 */
-//
+////
 //  /* USER CODE END USART3_Init 2 */
 //
 //}
 //
 ///* USER CODE BEGIN 1 */
-//int __io_putchar(int ch) {
-//    uint8_t c[1];
-//    c[0] = ch & 0xFF;
-////    while (hlpuart1.gState == HAL_UART_STATE_BUSY_TX) {}
-////    HAL_UART_Transmit(&hlpuart1, c, 1, HAL_MAX_DELAY);
-//    while (!LL_USART_IsActiveFlag_TXE(LPUART1)) {
-//        /* Wait active flag TXE */
-//    }
-//    LL_USART_TransmitData8(LPUART1, *(uint8_t*)c);
-//}
-//
-//int _write(int file, char *ptr, int len) {
-//    int DataIdx;
-//    for (DataIdx = 0; DataIdx < len; DataIdx++) {
-//        __io_putchar(*ptr++);
-//    }
-//    return len;
-//}
+////int __io_putchar(int ch) {
+////    uint8_t c[1];
+////    c[0] = ch & 0xFF;
+//////    while (hlpuart1.gState == HAL_UART_STATE_BUSY_TX) {}
+//////    HAL_UART_Transmit(&hlpuart1, c, 1, HAL_MAX_DELAY);
+////    while (!LL_USART_IsActiveFlag_TXE(LPUART1)) {
+////        /* Wait active flag TXE */
+////    }
+////    LL_USART_TransmitData8(LPUART1, *(uint8_t*)c);
+////}
+////
+////int _write(int file, char *ptr, int len) {
+////    int DataIdx;
+////    for (DataIdx = 0; DataIdx < len; DataIdx++) {
+////        __io_putchar(*ptr++);
+////    }
+////    return len;
+////}
 ///* USER CODE END 1 */

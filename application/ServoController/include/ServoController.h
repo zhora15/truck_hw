@@ -21,7 +21,8 @@ class ServoController {
   static void startTaskImpl(void *_this) {
       ((ServoController *) _this)->task();
   }
-  ServoController() : left_servo(Servo::get_instance(SERVO_LEFT)), right_servo(Servo::get_instance(SERVO_RIGHT)) {
+  ServoController() : left_servo(Servo::get_instance(ServoType::SERVO_LEFT)),
+    right_servo(Servo::get_instance(ServoType::SERVO_RIGHT)) {
   };
   ~ServoController() {};
   ServoController(const ServoController &obj) = delete;

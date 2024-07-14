@@ -10,9 +10,11 @@
 #include <cstdlib>
 
 #define SIMPLEFOC_DISABLE_DEBUG
-#define min(a,b) (((a)<(b))?(a):(b))
-#define max(a,b) (((a)>(b))?(a):(b))
 
+float min(float a, float b);
+float max(float a, float b);
+//#define min(a,b) (((a)<(b))?(a):(b))
+//#define max(a,b) (((a)>(b))?(a):(b))
 class Print;
 
 #endif //TRUCK_HW_CORE_INC_ARDUINO_H_

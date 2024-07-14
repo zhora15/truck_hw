@@ -8,29 +8,29 @@
 #include <cstdint>
 #include "pwm_servo.h"
 
-typedef enum {
+enum class ServoType{
   SERVO_LEFT,
   SERVO_RIGHT
-} servo_type;
+};
 
 class Servo {
  private:
   float servo_angle = 0.0f;
-  servo_type type_;
+  ServoType type_;
   PWMServo &pwm;
   bool is_initialized = false;
 
   float max_angle = 180;
   float min_angle = 0;
   int32_t init();
-  static PWMServo &get_pwm_instance(servo_type servo_type_) {
+  static PWMServo &get_pwm_instance(ServoType servo_type_) {
       switch (servo_type_) {
-          case SERVO_LEFT: return PWMServo::get_instance(PWM_SERVO_1);
-          case SERVO_RIGHT: return PWMServo::get_instance(PWM_SERVO_2);
+          case ServoType::SERVO_LEFT: return PWMServo::get_instance(PWMServoType::PWM_SERVO_1);
+          case ServoType::SERVO_RIGHT: return PWMServo::get_instance(PWMServoType::PWM_SERVO_2);
       }
   }
-  Servo(servo_type init_type) : pwm(get_pwm_instance(init_type)) {
-      type_ = init_type;
+  Servo(ServoType type) : pwm(get_pwm_instance(type)) {
+      type_ = type;
       init();
   };
 
@@ -39,18 +39,13 @@ class Servo {
   Servo &operator=(const Servo &obj) = delete;
 
  public:
-  static Servo &get_instance(servo_type get_type) {
-      switch (get_type) {
-          case SERVO_LEFT:
-              static Servo Servo_left(get_type);
-              Servo_left.type_ = SERVO_LEFT;
-              return Servo_left;
-          case SERVO_RIGHT:
-              static Servo Servo_right(get_type);
-              Servo_right.type_ = SERVO_RIGHT;
-              return Servo_right;
-          default: break;
+  static Servo &get_instance(ServoType type) {
+      static std::unordered_map<ServoType, Servo *> instances;
+      auto it = instances.find(type);
+      if (it == instances.end()) {
+          instances[type] = new Servo(type);
       }
+      return *instances[type];
   }
 
   int32_t set_angle(float angle);

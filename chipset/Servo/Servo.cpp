@@ -3,17 +3,13 @@
 
 int32_t Servo::init() {
     switch (type_) {
-        case SERVO_LEFT:
-            max_angle = 120; // 90 + 20  TODO
-            min_angle = 60; // 90 - 20
-//            max_angle = 180; // 90 + 20
-//            min_angle = 0; // 90 - 30
+        case ServoType::SERVO_LEFT:
+            max_angle = 110;
+            min_angle = 70;
             break;
-        case SERVO_RIGHT:
-            max_angle = 120; // 90 + 20
-            min_angle = 60; // 90 - 20 Todo
-//            max_angle = 180; // 90 + 20
-//            min_angle = 0; // 90 - 30
+        case ServoType::SERVO_RIGHT:
+            max_angle = 110;
+            min_angle = 70;
             break;
     }
     is_initialized = true;

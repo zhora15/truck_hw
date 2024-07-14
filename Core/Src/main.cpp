@@ -28,7 +28,7 @@ void vApplicationTickHook() {
 }
 
 extern void MX_LPUART1_UART_Init(void);
-#include "lpuart1.c"
+//#include "lpuart1.c"
 
 extern "C" void __aeabi_atexit() {};     // for virtual destructors
 extern "C" void __cxa_pure_virtual();   // for abstract base class
@@ -54,12 +54,12 @@ int main(void)
     static SensorPolling& SP = SensorPolling::getInstance();
     static ServoController& SC = ServoController::getInstance();
     static Protocol PR;
-//    SP.init();
-//    SP.start();
+    SP.init();
+    SP.start();
 //    MT.init();
 //    MT.calibrate();
 //    PR.init();
-    SC.init();
+//    SC.init();
 
     printf("Scheduling\n");
     LL_TIM_ClearFlag_UPDATE(TIM6);
